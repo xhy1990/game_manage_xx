@@ -95,11 +95,6 @@ export default {
 }
 </script>
 <style>
-html, body {
-  padding: 0px;
-  margin: 0px;
-  height: 100%;
-}
 #paper {
   background: url("../assets/bg.jpg") no-repeat center;
   height: 100%;

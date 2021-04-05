@@ -36,7 +36,13 @@ const router = new Router({
             component: () => import('@/components/home/Home'),
             meta: {
                 requiresAuth: true
-            }
+            },
+            children: [
+                {
+                    path: '/home/createUser',
+                    component: () => import('@/components/user/CreateUser'),
+                }
+            ]
         },
         {
             path: '/menu',
@@ -54,44 +60,49 @@ const router = new Router({
     ]
 })
 
-let routes = []
+// let routes = []
 
-function initMenuRoutes() {
-    routes = []
-    menusToRoutes(store.getters.menus)
-    router.addRoutes(routes)
-    // store.commit('initRoute', routes)
-    // routes = store.getters.routes
-    // if(!routes || routes.length <= 0){
-    //
-    // }else{
-    //     routes.forEach(route => {
-    //         console.log('=============' + JSON.stringify(route))
-    //         router.addRoute('home', route)
-    //     })
-    // }
-}
-
-function menusToRoutes(menus) {
-    menus.forEach(menu => {
-        if (menu.childList) {
-            menusToRoutes(menu.childList)
-        }
-        if (!menu.component) {
-            return
-        }
-        console.log(JSON.stringify(menu))
-        let route = {
-            path: menu.path,
-            component: () => import('@/components/' + menu.component),
-            meta: {
-                requireAuth: true
-            }
-        }
-        // router.addRoute('home', route)
-        routes.push(route)
-    })
-}
+// function initMenuRoutes() {
+//     routes = []
+//     menusToRoutes(store.getters.menus)
+//     router.addRoutes(routes)
+//     console.log("currentRouteFullPath1:"+router.currentRoute.fullPath)
+//     router.options.routes.pop()
+//
+//     console.log("currentRouteFullPath2:"+router.currentRoute.fullPath)
+//     console.log('router000000000000000000---------------' + JSON.stringify(router.options.routes))
+//     // store.commit('initRoute', routes)
+//     // routes = store.getters.routes
+//     // if(!routes || routes.length <= 0){
+//     //
+//     // }else{
+//     //     routes.forEach(route => {
+//     //         console.log('=============' + JSON.stringify(route))
+//     //         router.addRoute('home', route)
+//     //     })
+//     // }
+// }
+//
+// function menusToRoutes(menus) {
+//     menus.forEach(menu => {
+//         if (menu.childList) {
+//             menusToRoutes(menu.childList)
+//         }
+//         if (!menu.component) {
+//             return
+//         }
+//         console.log(JSON.stringify(menu))
+//         let route = {
+//             path: menu.path,
+//             component: () => import('@/components/' + menu.component),
+//             meta: {
+//                 requireAuth: true
+//             }
+//         }
+//         router.addRoute('home', route)
+//         // routes.push(route)
+//     })
+// }
 
 router.beforeEach((to, from, next) => {
     console.log('login11111111111111')
@@ -101,10 +112,11 @@ router.beforeEach((to, from, next) => {
 
     if (store.getters.token) {
         if(to.path.startsWith('/home')){
+
             console.log('login222222222222222222')
-            initMenuRoutes()
+            // initMenuRoutes()
             console.log('router---------------' + JSON.stringify(router.options.routes))
-            console.log('router---------------' + router.getRoutes().length)
+            console.log('router---------------' + router.getRoutes().keys());
 
 
             next()
@@ -112,6 +124,7 @@ router.beforeEach((to, from, next) => {
             console.log('login3333333333333333333')
             next()
         }
+
     }else{
         if (to.matched.some(r => r.meta.requiresAuth)) {
             console.log('login444444444444444444444')
@@ -166,5 +179,22 @@ router.beforeEach((to, from, next) => {
     //     next()
     // }
 })
+
+
+Vue.use(Router)
+// 解决报错
+const originalPush = Router.prototype.push
+const originalReplace = Router.prototype.replace
+// push
+Router.prototype.push = function push (location, onResolve, onReject) {
+    if (onResolve || onReject) return originalPush.call(this, location, onResolve, onReject)
+    return originalPush.call(this, location).catch(err => err)
+}
+// replace
+Router.prototype.replace = function push (location, onResolve, onReject) {
+    if (onResolve || onReject) return originalReplace.call(this, location, onResolve, onReject)
+    return originalReplace.call(this, location).catch(err => err)
+}
+
 
 export default router

@@ -1,10 +1,10 @@
 <template>
   <el-card class="admin-header">
-    <a href="/index">
-      <img src="../../assets/logo.png" alt="" width="30px" style="float: left;">
-    </a>
-    <span style="font-weight: bold;position:absolute;left: 100px">GM管理后台</span>
-    <i class="el-icon-switch-button" v-on:click="logout" style="float: right"></i>
+      <a href="/index">
+        <img src="../../assets/logo.png" alt="" width="30px" style="float: left;">
+      </a>
+      <span style="font-weight: bold;position:absolute;left: 100px">GM管理后台</span>
+      <i class="el-icon-switch-button" v-on:click="logout" style="float: right"></i>
   </el-card>
 </template>
 
